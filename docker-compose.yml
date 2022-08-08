@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  database_node:
+    image: postgres
+    container_name: database_node
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=node-crud-rest-api
+    volumes:
+      - pgdata:/data/postgres
+    
+volumes:
+  pgdata:
+    driver: local
