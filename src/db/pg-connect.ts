@@ -1,10 +1,10 @@
-import Pool from 'pg-pool';
+import {Pool} from 'pg';
 
 const pool = new Pool({
-  database: 'ecommerce',
-  user: 'postgres',
-  password: 'docker',
-  host: 'localhost',
+  database: "postgres",
+  user: "postgres",
+  password: "docker",
+  host: "localhost",
   port: 5432
 });
 
