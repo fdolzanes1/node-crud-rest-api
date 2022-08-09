@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "ts-node-dev --respawn --pretty --transpile-only src/index.ts"
+    "dev": "set NODE_ENV=development&& ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "prod": "set NODE_ENV=production&& ts-node-dev --respawn --pretty --transpile-only src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "nodemon": "^2.0.19",
     "pg": "^8.7.3",
