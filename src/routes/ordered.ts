@@ -28,8 +28,11 @@ router.get(path+'/:id_ordered', (req, res, next) => {
   const id = req.params.id_ordered;
   
   pool.query('SELECT * FROM ordered WHERE id_ordered = $1', [id], (error, data) => {
-    if (error) {
-      return res.status(500).send({ error: error })
+    if (error) { return res.status(500).send({ error: error }) }
+    if (data.rows.length == 0) {
+      return res.status(404).send({
+        mensagem: 'Não foi encontrado pedido com este ID'
+      });
     }
 
     const response = {
