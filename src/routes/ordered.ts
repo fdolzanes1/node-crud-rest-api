@@ -42,15 +42,34 @@ router.get(path+'/:id_ordered', (req, res, next) => {
         }
       })
     }
-    
+
     res.status(200).json(response)
   });
 });
 
 router.post(path, (req, res, next) => {
-  res.status(201).send({ 
-    message: "Using method POST in ordered"
+  
+  pool.query('SELECT * FROM products WHERE id_product = $1',[req.body.id_product],(error, data) => {
+      
+    if (error) { return res.status(500).send({ error: error }) }
+    
+    pool.query('INSERT INTO ordered (id_ordered, id_product, amount) VALUES ($1,$2, $3)', [req.body.id_ordered, req.body.id_product, req.body.amount],(error, data) => {
+      
+      if (error) { return res.status(500).send({ error: error }) }
+      
+      const response = {
+        ordered: {
+          id_ordered: req.body.id_ordered,
+          id_product: req.body.id_product,
+          amount: req.body.amount
+        }
+      }
+      
+      return res.status(201).send(response);
+    });
+
   });
+
 });
 
 router.put(path+'/:id_ordered', (req, res, next) => {
