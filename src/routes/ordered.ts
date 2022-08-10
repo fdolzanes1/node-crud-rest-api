@@ -52,6 +52,11 @@ router.post(path, (req, res, next) => {
   pool.query('SELECT * FROM products WHERE id_product = $1',[req.body.id_product],(error, data) => {
       
     if (error) { return res.status(500).send({ error: error }) }
+    if (data.rows.length == 0) {
+      return res.status(404).send({
+        mensagem: 'Não foi encontrado produto com este ID'
+      });
+    }
     
     pool.query('INSERT INTO ordered (id_ordered, id_product, amount) VALUES ($1,$2, $3)', [req.body.id_ordered, req.body.id_product, req.body.amount],(error, data) => {
       
@@ -72,20 +77,25 @@ router.post(path, (req, res, next) => {
 
 });
 
-router.put(path+'/:id_ordered', (req, res, next) => {
-  const id = req.params.id_ordered;
-  res.status(200).send({ 
-    id: id,
-    message: "Using method PUT in ordered"
-  });
-});
-
 router.delete(path+'/:id_ordered', (req, res, next) => {
   const id = req.params.id_ordered;
-  res.status(201).send({ 
-    id: id,
-    message: "Using method DELETE in ordered"
+
+  pool.query('SELECT * FROM ordered WHERE id_ordered = $1', [id], (error, data) => {
+    if (error) { return res.status(500).send({ error: error }) }
+    if (data.rows.length == 0) {
+      return res.status(404).send({
+        mensagem: 'Não foi encontrado pedido com este ID'
+      });
+    }
+
+    pool.query('DELETE FROM ordered WHERE id_ordered = $1', [id], (error, data) => {
+  
+      if (error) { return res.status(500).send({ error: error }) }
+      
+      return res.status(202).send({ mensagem: 'Pedido removido com sucesso' });
+    });
   });
+
 });
 
 export default router;
