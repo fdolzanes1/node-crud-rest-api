@@ -1,10 +1,26 @@
 import express from 'express';
+import pool from '../db/pg-connect';
 const router = express.Router();
 const path = '/ordered'
 
 router.get(path, (req, res, next) => {
-  res.status(200).send({ 
-    message: "Using method GET in ordered"
+  pool.query('SELECT * FROM ordered', (error, data) => {
+    if (error) {
+      return res.status(500).send({ error: error })
+    }
+
+    const response = {
+      amount: data.rows.length,
+      ordereds: data.rows.map(ordered => {
+        return {
+          id_ordered: ordered.id_ordered,
+          id_product: ordered.id_product,
+          amount: ordered.amount
+        }
+      })
+    }
+
+    res.status(200).json(response)
   });
 });
 
