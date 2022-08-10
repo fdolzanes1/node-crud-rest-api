@@ -26,9 +26,24 @@ router.get(path, (req, res, next) => {
 
 router.get(path+'/:id_ordered', (req, res, next) => {
   const id = req.params.id_ordered;
-  res.status(200).send({ 
-    id: id,
-    message: "Using method GET in ordered"
+  
+  pool.query('SELECT * FROM ordered WHERE id_ordered = $1', [id], (error, data) => {
+    if (error) {
+      return res.status(500).send({ error: error })
+    }
+
+    const response = {
+      amount: data.rows.length,
+      ordereds: data.rows.map(ordered => {
+        return {
+          id_ordered: ordered.id_ordered,
+          id_product: ordered.id_product,
+          amount: ordered.amount
+        }
+      })
+    }
+    
+    res.status(200).json(response)
   });
 });
 
