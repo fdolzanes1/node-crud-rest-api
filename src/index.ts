@@ -11,9 +11,6 @@ app.use(express.json());
 app.use(routerProducts);
 app.use(routerOrdered);
 
-app.get('/', (req, res) => {
-  res.status(200).send({ "message": "Hello World" });
-});
 
 app.listen(config.PORT, () => {
   console.log(`APP LISTENING ${config.NODE_ENV} ON http://${config.HOST}:${config.PORT}`);
